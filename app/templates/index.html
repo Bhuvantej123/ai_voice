@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h2>🎤 Voice AI Assistant</h2>
+  
+  <!-- Microphone animation circle -->
+  <div id="mic-visual"></div>
+
+  <div class="btn-group">
+    <button id="speakBtn">🎙️ Start Listening</button>
+    <button id="togglePauseBtn">⏯ Pause / Resume</button>
+    <button id="cancelBtn">❌ Cancel Speech</button>
+  </div>
+
+  <p id="status">Ready to assist you 🤖</p>
+  <div id="response"></div>
+</div>
+
+<script>
+  const speakBtn = document.getElementById("speakBtn");
+  const togglePauseBtn = document.getElementById("togglePauseBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const status = document.getElementById("status");
+  const responseBox = document.getElementById("response");
+  const micVisual = document.getElementById("mic-visual");
+
+  let recognition;
+  let currentUtterance = null;
+
+  if (!('webkitSpeechRecognition' in window)) {
+    status.innerText = "❌ Speech recognition not supported. Use Chrome.";
+  } else {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      status.innerText = "🎤 Listening...";
+      micVisual.classList.add("listening");
+    };
+
+    recognition.onerror = (event) => {
+      status.innerText = "⚠️ Error: " + event.error;
+    };
+
+    recognition.onend = () => {
+      status.innerText = "✅ Stopped listening.";
+      micVisual.classList.remove("listening");
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      status.innerText = "📝 You said: " + transcript;
+
+      fetch("/voice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: transcript })
+      })
+      .then(res => res.json())
+      .then(data => {
+        responseBox.innerText = "🤖 AI: " + data.response;
+
+        // ✅ Speak AI response
+        currentUtterance = new SpeechSynthesisUtterance(data.response);
+        window.speechSynthesis.cancel(); // stop any ongoing speech
+        window.speechSynthesis.speak(currentUtterance);
+      })
+      .catch(err => console.error("Fetch error:", err));
+    };
+
+    // 🎤 Start listening
+    speakBtn.onclick = () => {
+      recognition.start();
+    };
+
+    // ⏯ Toggle pause/resume
+    togglePauseBtn.onclick = () => {
+      if (speechSynthesis.speaking) {
+        if (speechSynthesis.paused) {
+          speechSynthesis.resume();
+          status.innerText = "▶ Resumed speech.";
+        } else {
+          speechSynthesis.pause();
+          status.innerText = "⏸ Paused speech.";
+        }
+      }
+    };
+
+    // ❌ Cancel AI speech completely
+    cancelBtn.onclick = () => {
+      speechSynthesis.cancel();
+      status.innerText = "❌ Speech canceled.";
+    };
+  }
+</script>
+{% endblock %}

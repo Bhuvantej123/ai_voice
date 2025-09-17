@@ -1,0 +1,100 @@
+/* General page styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container card */
+.container {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  padding: 30px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+/* Title */
+.container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #f9f9f9;
+}
+
+/* Buttons */
+button {
+  background: #6c63ff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #5750d3;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Status + Response */
+#status {
+  margin-top: 15px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+#response {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  font-size: 1.1rem;
+  color: #f1f1f1;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Microphone pulse animation */
+#mic-visual {
+  width: 60px;
+  height: 60px;
+  margin: 15px auto;
+  border-radius: 50%;
+  background: #6c63ff;
+  box-shadow: 0 0 15px rgba(108, 99, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+#mic-visual.listening {
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(108, 99, 255, 0.8);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(108, 99, 255, 1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(108, 99, 255, 0.8);
+  }
+}

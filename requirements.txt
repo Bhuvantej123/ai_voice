@@ -1,0 +1,6 @@
+flask
+groq
+python-dotenv
+gtts
+pydub
+gunicorn
